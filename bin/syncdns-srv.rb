@@ -1,3 +1,4 @@
+require 'sinatra'
 require 'json'
 
 require_relative '../lib/syncdns.rb'
