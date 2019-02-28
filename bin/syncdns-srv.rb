@@ -21,6 +21,11 @@ get '/' do
   "SimpleSyncDNS remote API\n"
 end
 
+# get zones
+get '/zones' do
+  { "zones" => SyncDNS.list_zones }.to_json
+end
+
 # setup zone
 post '/zones' do
   data = json_params

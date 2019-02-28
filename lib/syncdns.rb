@@ -2,6 +2,12 @@ require_relative 'knot'
 
 class SyncDNS
 
+  def self.list_zones
+    if CONF::DNS_SERVER_TYPE == :knot
+      return KnotSyncDNS.new.list_zones
+    end
+  end
+
   def self.setup_zone(zones, content)
     if CONF::DNS_SERVER_TYPE == :knot
       knot_sync_dns = KnotSyncDNS.new

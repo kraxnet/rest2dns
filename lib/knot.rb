@@ -10,6 +10,10 @@ class KnotSyncDNS
     @zone_list_conf = read_zone_list
   end
 
+  def list_zones
+    @zone_list_conf["zone"].collect { |z| z["domain"] }
+  end
+
   def setup_zone(zone, content)
     add_zone_to_list(zone)
     store_zone_file(zone, content)
