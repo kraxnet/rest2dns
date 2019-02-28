@@ -24,7 +24,10 @@ end
 # setup zone
 post '/zones' do
   data = json_params
-  result = SyncDNS.setup_zone(data["zones"], data["content"])
+  result = SyncDNS.check_zone("syncdns-check.tld", data["content"])
+  if result.last.success?
+    result = SyncDNS.setup_zone(data["zones"], data["content"])
+  end
   halt (result.last.success? ? 200 : 503), result.first.to_json
 end
 
@@ -37,5 +40,7 @@ end
 
 # check zone
 post '/zones/check' do
-  "Check zone\n"
+  data = json_params
+  result = SyncDNS.check_zone("syncdns-check.tld", data["content"])
+  halt (result.last.success? ? 200 : 503), result.first.to_json
 end

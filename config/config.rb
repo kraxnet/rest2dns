@@ -12,7 +12,8 @@ module CONF
     ZONE_FILE_SUFFIX = ".zone"
     ZONE_FILE_LIST = "zones/knot-zones.conf"
     DOMAIN_TEMPLATE_NAME = "syncdns"
-    RELOAD_COMMAND = "knotc reload"
+    COMMAND_RELOAD = "knotc reload"
+    COMMAND_CHECKZONE = "kzonecheck"
 
   end
 

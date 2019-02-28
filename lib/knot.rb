@@ -1,4 +1,5 @@
 require 'yaml'
+require 'tempfile'
 
 class KnotSyncDNS
 
@@ -32,7 +33,7 @@ class KnotSyncDNS
 
   def reload
     begin
-      output = %x( #{CONF::KNOT::RELOAD_COMMAND} )
+      output = %x( #{CONF::KNOT::COMMAND_RELOAD} )
     rescue => err
       output = err.to_s
     end
@@ -63,6 +64,32 @@ class KnotSyncDNS
 
   def destroy_zone_file(zone)
     File.delete(File.join(CONF::KNOT::ZONE_FILE_DIR, zone + CONF::KNOT::ZONE_FILE_SUFFIX)) if File.exists?(File.join(CONF::KNOT::ZONE_FILE_DIR, zone + CONF::KNOT::ZONE_FILE_SUFFIX))
+  end
+
+end
+
+
+class KnotZoneCheck
+
+  @zone_name = nil
+  @zone_content = nil
+
+  def initialize(zone_name, zone_content)
+    @zone_name = zone_name
+    @zone_content = zone_content
+  end
+
+  def check
+    tmpfile = Tempfile.new("syncdns")
+    tmpfile.write(@zone_content)
+    tmpfile.close
+    result = check_zonefile(@zone_name, tmpfile.path)
+    tmpfile.unlink
+    return result
+  end
+
+  private
+  def check_zonefile(zonename, filename)
   end
 
 end
