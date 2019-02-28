@@ -90,6 +90,44 @@ class KnotZoneCheck
 
   private
   def check_zonefile(zonename, filename)
+    result = {}
+    output = `#{$kzonecmd} -v -o #{zonename} #{filename} 2>&1`
+    return [true, result] if $?.success? # no errors
+    result[:full_output] = output
+    result[:errors] = []
+    output.each_line do |line|
+      line = line.chomp!
+      case line
+      when /^$/ then next
+      when /^\s/ then next
+      when /^Failed to run semantic checks/ then next
+      when /^Serious semantic error detected/ then next
+      when /^Error summary:$/ then next
+      when /^error:/
+        error = {:text => line}
+
+        m = /line (\d+)/.match(line)
+        error[:lineno] = m[1] if m && m[1]
+
+        m = /\(([^\)]*)\)/.match(line)
+        error[:type] = m[1] if m && m[1]
+
+        result[:errors] << error
+      when /^\[/
+        error = {:text => line}
+
+        m = /\[([^\]].*)\]\s(.*)/.match(line)
+        if m && m[2]
+          error[:type] = m[2]
+        else
+          error[:type] = line
+        end
+        result[:errors] << error
+      else
+        puts "unknown line: #{line}"
+      end
+    end
+    return [false, result]
   end
 
 end
