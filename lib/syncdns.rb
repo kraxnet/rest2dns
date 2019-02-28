@@ -1,18 +1,15 @@
 require_relative 'knot'
 
 class SyncDNS
-
   def self.list_zones
-    if CONF::DNS_SERVER_TYPE == :knot
-      return KnotSyncDNS.new.list_zones
-    end
+    return KnotSyncDNS.new.list_zones if CONF::DNS_SERVER_TYPE == :knot
   end
 
   def self.setup_zone(zones, content)
     if CONF::DNS_SERVER_TYPE == :knot
       knot_sync_dns = KnotSyncDNS.new
-      zones.each { |zone| knot_sync_dns.setup_zone(zone,content) }
-      return knot_sync_dns.save_and_reload
+      zones.each { |zone| knot_sync_dns.setup_zone(zone, content) }
+      knot_sync_dns.save_and_reload
     end
   end
 
@@ -20,7 +17,7 @@ class SyncDNS
     if CONF::DNS_SERVER_TYPE == :knot
       knot_sync_dns = KnotSyncDNS.new
       zones.each { |zone| knot_sync_dns.destroy_zone(zone) }
-      return knot_sync_dns.save_and_reload
+      knot_sync_dns.save_and_reload
     end
   end
 
@@ -33,13 +30,14 @@ class SyncDNS
       else
         return [
           # select only errors with linenumber
-          {:errors => result.first[:errors].collect { |err| next if err[:lineno].nil?
-            {:line => err[:lineno].to_i, :text => err[:type] }
-          }.compact },
-          result.last]
+          { errors: result.first[:errors].collect do |err|
+            next if err[:lineno].nil?
+            { line: err[:lineno].to_i, text: err[:type] }
+          end.compact },
+          result.last
+        ]
       end
-      return result
+      result
     end
   end
-
 end

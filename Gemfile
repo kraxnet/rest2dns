@@ -1,5 +1,5 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-gem "puma"
-gem "sinatra"
-gem "json"
+gem 'puma'
+gem 'sinatra'
+gem 'json'
