@@ -90,11 +90,15 @@ class KnotZoneCheck
 
   private
   def check_zonefile(zonename, filename)
-    result = {}
-    output = `#{$kzonecmd} -v -o #{zonename} #{filename} 2>&1`
-    return [true, result] if $?.success? # no errors
-    result[:full_output] = output
-    result[:errors] = []
+    begin
+      output = `#{CONF::KNOT::COMMAND_CHECKZONE} -v -o #{zonename} #{filename} 2>&1`
+    rescue => err
+      output = err.to_s
+    end
+    process_status = $?
+    return [{ :full_output => output }, process_status] if process_status.success? # no errors
+
+    result = { :full_output => output, :errors => []}
     output.each_line do |line|
       line = line.chomp!
       case line
@@ -124,10 +128,10 @@ class KnotZoneCheck
         end
         result[:errors] << error
       else
-        puts "unknown line: #{line}"
+        $log.error "unknown line: #{line}"
       end
     end
-    return [false, result]
+    return [result, process_status]
   end
 
 end
