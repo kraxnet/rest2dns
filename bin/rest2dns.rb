@@ -17,7 +17,7 @@ helpers do
 end
 
 get '/' do
-  "SimpleSyncDNS remote API\n"
+  "Rest2DNS remote API\n"
 end
 
 # get zones
@@ -38,8 +38,9 @@ end
 # delete zone
 delete '/zones' do
   data = json_params
-  result = SyncDNS.destroy_zone(data['zones'])
-  halt (result.last.success? ? 200 : 503), result.first.to_json
+  SyncDNS.destroy_zone(data['zones'])
+  # halt (result.last.success? ? 200 : 503), result.first.to_json
+  halt 200
 end
 
 # check zone

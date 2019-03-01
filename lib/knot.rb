@@ -2,11 +2,9 @@ require 'yaml'
 require 'tempfile'
 
 class KnotSyncDNS
-  @zone_list_conf = {}
-  @zone_list_changed = false
-
   def initialize
     @zone_list_conf = read_zone_list
+    @zone_list_changed = false
   end
 
   def list_zones
@@ -40,7 +38,7 @@ class KnotSyncDNS
     rescue => err
       output = err.to_s
     end
-    process_status = $CHILD_STATUS
+    process_status = $?
     [output, process_status]
   end
 
@@ -96,7 +94,7 @@ class KnotZoneCheck
     rescue => err
       output = err.to_s
     end
-    process_status = $CHILD_STATUS
+    process_status = $?
     return [{ full_output: output }, process_status] if process_status.success? # no errors
 
     result = { full_output: output, errors: [] }
