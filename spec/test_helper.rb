@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
+require 'bundler/setup'
+
 ENV['RACK_ENV'] = 'test'
 require 'minitest/autorun'
 require 'rack/test'
 
 require File.expand_path '../config/config.rb', __dir__
-require File.expand_path '../bin/rest2dns.rb', __dir__
+require 'rest2dns'
 
 module CONF
   module KNOT

@@ -5,11 +5,6 @@ require 'bundler'
 Bundler.setup
 
 require_relative 'config/config.rb'
+require 'rest2dns'
 
-require 'sinatra'
-require 'erb'
-require 'yaml'
-
-require_relative 'bin/syncdns-srv.rb'
-
-run Sinatra::Application
+run Rest2DnsApp
