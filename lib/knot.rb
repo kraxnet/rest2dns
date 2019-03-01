@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'yaml'
 require 'tempfile'
 
@@ -35,7 +37,7 @@ class KnotSyncDNS
   def reload
     begin
       output = `#{CONF::KNOT::COMMAND_RELOAD}`
-    rescue => err
+    rescue StandardError => err
       output = err.to_s
     end
     process_status = $?
@@ -91,7 +93,7 @@ class KnotZoneCheck
   def check_zonefile(zonename, filename)
     begin
       output = `#{CONF::KNOT::COMMAND_CHECKZONE} -v -o #{zonename} #{filename} 2>&1`
-    rescue => err
+    rescue StandardError => err
       output = err.to_s
     end
     process_status = $?

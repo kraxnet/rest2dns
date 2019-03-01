@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'sinatra'
 require 'json'
 
@@ -10,7 +12,7 @@ end
 helpers do
   def json_params
     JSON.parse(request.body.read)
-  rescue => err
+  rescue StandardError => err
     $log.error(err)
     halt 400, { message: 'Invalid JSON' }.to_json
   end

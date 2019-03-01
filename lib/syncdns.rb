@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'knot'
 
 class SyncDNS
@@ -32,11 +34,13 @@ class SyncDNS
           # select only errors with linenumber
           { errors: result.first[:errors].collect do |err|
             next if err[:lineno].nil?
+
             { line: err[:lineno].to_i, text: err[:type] }
           end.compact },
           result.last
         ]
       end
+
       result
     end
   end
