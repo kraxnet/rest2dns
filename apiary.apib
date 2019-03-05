@@ -1,15 +1,18 @@
 FORMAT: 1A
 HOST: https://nameserver.dns/
 
-# DNS
+# Rest2DNS
 
-API pro správu zón na DNS serveru.
+API for managing zones on the DNS servers.
 
 ## Zones [/zones]
 
 ### Add or update DNS zone [POST]
 
-Přidání nebo aktualizace zóny na DNS serveru. Parametr *zones* obsahuje seznam domén, kterých se změna týká, parametr *content* obsahuje raw text obsah zóny.
+There is the same endpoint for creating or updating zones. You can create or update multiple zones at once if they should have same content.
+
++ zones (array[string]) - contains list of created/changed zones
++ content (string) - plain text zone content
 
 + Request (application/json)
 
@@ -25,7 +28,9 @@ Přidání nebo aktualizace zóny na DNS serveru. Parametr *zones* obsahuje sezn
 
 ### Remove DNS zones [DELETE]
 
-Občas je potřeba zónu i odebrat :)
+You can remove multiple zones at once.
+
++ zones (array[string]) - contains list of removed domains
 
 + Request (application/json)
 
@@ -40,7 +45,9 @@ Občas je potřeba zónu i odebrat :)
 
 ### Check DNS zonefile [POST /zones/check]
 
-Externí služby si mohou zkontrolovat, zda je zónový soubor validní.
+Service for validating zone content.
+
++ content (string) - plain text zone content
 
 + Request (application/json)
 
