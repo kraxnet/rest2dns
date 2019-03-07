@@ -5,7 +5,7 @@ require 'tempfile'
 
 class KnotSyncDNS
   def initialize
-    @zone_list_conf = read_zone_list
+    read_zone_list
     @zone_list_changed = false
   end
 
@@ -45,7 +45,13 @@ class KnotSyncDNS
   end
 
   def read_zone_list
-    File.exist?(CONF::KNOT::ZONE_FILE_LIST) ? YAML.load_file(CONF::KNOT::ZONE_FILE_LIST) : { 'zone' => [] }
+    @zone_list_conf = File.exist?(CONF::KNOT::ZONE_FILE_LIST) ? YAML.load_file(CONF::KNOT::ZONE_FILE_LIST) : { 'zone' => [] }
+    if @zone_list_conf == false
+      @zone_list_conf = { 'zone' => [] }
+    elsif @zone_list_conf["zone"].nil?
+      @zone_list_conf["zone"] = []
+    end
+    @zone_list_conf
   end
 
   def add_zone_to_list(zone)
